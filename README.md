@@ -4,10 +4,20 @@ The Timer is a utility class for managing time-related operations in Unity. It p
 
 ## Usage
 
-1. **Create Timer Instance**: You can create an instance of the Timer class using the constructor.
+
+0. **Create Timer Instance**: You can create an instance of the Timer class using the constructor.
 
     ```csharp
     Timer timer = new Timer();
+    ```
+	
+1. **Ensure the Timer update**: You need to write the Update function in Unity MonoBehaviour class.
+
+    ```csharp
+	private void Update()
+    {
+        timer.Update();
+    }
     ```
 
 2. **Start Timer**: To start the timer, use the `Begin` method and specify the release time.
