@@ -22,9 +22,9 @@ public class Timer
     }
 
     /// <summary>
-    /// 计时器计时进度
+    /// Get the progress of the timer.
     /// </summary>
-    /// <returns>Float Normalized Time</returns>
+    /// <returns>Representing the normalized time in float.</returns>
     public float Progress()
     {
         if (releaseTime != 0 && runningTime != 0)
@@ -39,10 +39,10 @@ public class Timer
     }
 
     /// <summary>
-    /// 计时器进度检测
+    /// Check if the timer has reached a certain progress.
     /// </summary>
-    /// <param name="Time">需要检测的时间</param>
-    /// <returns>计时器是否已经达到目标时间</returns>
+    /// <param name="Time">The time to check against.</param>
+    /// <returns>True if the timer has reached the specified time, false otherwise.</returns>
     public bool ReachProgress(float Time)
     {
         return runningTime > Time;
@@ -81,14 +81,13 @@ public class Timer
         return runningTime > releaseTime;
     }
 
+    // Ensure to call Timer's Update method in Unity's Update() method to update the timer.
     public void Update()
     {
-        if (Running)
-        {
-            runningTime += Time.deltaTime;
-            if (IsEnd()) { TimerEnded?.Invoke(); }
-            TimerRunning?.Invoke();
-        }
+        if (!Running) { return; }
+        runningTime += Time.deltaTime;
+        if (IsEnd()) { TimerEnded?.Invoke(); }
+        TimerRunning?.Invoke();
     }
 
 }
