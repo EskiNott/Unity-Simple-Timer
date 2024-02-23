@@ -19,7 +19,7 @@ public class Timer
     /// </summary>
     [SerializeField] float runningTime;
 
-    [SerializeField] TimerMode timerMode;
+    [field: SerializeField] public TimerMode Mode { get; private set; }
 
     /// <summary>
     /// Event invoked when the timer is started
@@ -59,12 +59,13 @@ public class Timer
         Running = false;
         releaseTime = 0;
         runningTime = 0;
-        timerMode = TimerMode.InstantStop;
+        Mode = TimerMode.InstantStop;
     }
 
     /// <summary>
     /// Enum representing different modes of operation for the timer.
     /// </summary>
+    [System.Serializable]
     public enum TimerMode
     {
         /// <summary>
@@ -194,7 +195,7 @@ public class Timer
     /// <param name="timerMode">The mode to set for the timer.</param>
     public void SetTimerMode(TimerMode timerMode)
     {
-        this.timerMode = timerMode;
+        this.Mode = timerMode;
     }
 
     /// <summary>
@@ -217,12 +218,12 @@ public class Timer
         if (IsEnd())
         {
             TimerEnded?.Invoke();
-            if (timerMode == TimerMode.InstantStop)
+            if (Mode == TimerMode.InstantStop)
             {
                 Pause();
                 return;
             }
-            else if (timerMode == TimerMode.Loop)
+            else if (Mode == TimerMode.Loop)
             {
                 runningTime -= releaseTime;
                 runningTime = runningTime > 0 ? runningTime : 0;
