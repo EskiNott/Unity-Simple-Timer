@@ -1,5 +1,3 @@
-Here is a README.md for a Unity Simple Timer project based on the provided code:
-
 # Unity Simple Timer
 
 This is a simple timer utility for Unity. It allows you to create and control timer objects in your Unity projects.
