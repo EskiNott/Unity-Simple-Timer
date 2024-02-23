@@ -1,73 +1,20 @@
-# Simple Timer
+# Unity Simple Timer
 
-The Timer is a utility class for managing time-related operations in Unity. It provides functionality for starting, pausing, resuming, and resetting timers, as well as events for handling various timer states.
+Unity Simple Timer is a lightweight timer class designed for use in Unity projects. This timer allows you to easily manage timed events, track progress, and execute actions upon timer completion.
 
-## Usage
+## Features
 
+- **Simple Implementation**: Easily integrate timers into your Unity projects with minimal setup.
+- **Flexible Usage**: Start, pause, resume, reset, and monitor the progress of timers as needed.
+- **Event-driven Design**: Utilizes events to notify when the timer starts, pauses, resumes, ends, and resets, enabling seamless integration with other game components.
 
-0. **Create Timer Instance**: You can create an instance of the Timer class using the constructor.
+## How to Use
 
-    ```csharp
-    Timer timer = new Timer();
-    ```
-	
-1. **Ensure the Timer update**: You need to write the Update function in Unity MonoBehaviour class.
-
-    ```csharp
-	private void Update()
-    {
-        timer.Update();
-    }
-    ```
-
-2. **Start Timer**: To start the timer, use the `Begin` method and specify the release time.
-
-    ```csharp
-    timer.Begin(10f); // Starts the timer with a release time of 10 seconds
-    ```
-
-3. **Pause Timer**: To pause the timer, use the `Pause` method.
-
-    ```csharp
-    timer.Pause();
-    ```
-
-4. **Resume Timer**: To resume the timer after pausing, use the `Play` method.
-
-    ```csharp
-    timer.Play();
-    ```
-
-5. **Reset Timer**: To reset the timer, use the `Reset` method.
-
-    ```csharp
-    timer.Reset();
-    ```
-
-6. **Check Timer Progress**: You can check the progress of the timer using the `Progress` method, which returns the normalized time.
-
-    ```csharp
-    float progress = timer.Progress();
-    ```
-
-7. **Check if Timer is Ended**: To check if the timer has reached its end, use the `IsEnd` method.
-
-    ```csharp
-    bool isEnd = timer.IsEnd();
-    ```
-
-## Events
-
-The Timer class provides events to handle different timer states:
-
-- `TimerStarted`: Triggered when the timer is started.
-- `TimerPlayed`: Triggered when the timer is played (resumed).
-- `TimerPaused`: Triggered when the timer is paused.
-- `TimerEnded`: Triggered when the timer reaches its end.
-- `TimerRunning`: Triggered continuously while the timer is running.
-- `TimerReset`: Triggered when the timer is reset.
-
-You can subscribe to these events to execute custom logic based on the timer state.
+1. **Import Timer Class**: Import the `Timer.cs` class into your Unity project.
+2. **Instantiate Timer**: Create an instance of the `Timer` class wherever you need to use a timer.
+3. **Configure Timer**: Set the release time using the `Begin` method and start the timer with the `Play` method.
+4. **Update Timer**: Call the `Update` method in your Unity `Update` loop to update the timer.
+5. **Handle Events**: Subscribe to the timer events (`TimerStarted`, `TimerPlayed`, `TimerPaused`, `TimerEnded`, `TimerRunning`, `TimerReset`) to execute custom actions based on timer states.
 
 ## Example
 
@@ -76,53 +23,23 @@ using UnityEngine;
 
 public class TimerExample : MonoBehaviour
 {
-    private Timer timer;
+    Timer timer;
 
-    private void Start()
+    void Start()
     {
         timer = new Timer();
-        timer.TimerStarted += OnTimerStarted;
-        timer.TimerPaused += OnTimerPaused;
-        timer.TimerPlayed += OnTimerPlayed;
-        timer.TimerEnded += OnTimerEnded;
-        timer.TimerRunning += OnTimerRunning;
-        timer.TimerReset += OnTimerReset;
+        timer.TimerEnded += OnTimerEnd;
+        timer.Begin(10f); // Start a timer with 10 seconds
     }
 
-    private void Update()
+    void Update()
     {
         timer.Update();
     }
 
-    private void OnTimerStarted()
-    {
-        Debug.Log("Timer started!");
-    }
-
-    private void OnTimerPaused()
-    {
-        Debug.Log("Timer paused!");
-    }
-
-    private void OnTimerPlayed()
-    {
-        Debug.Log("Timer played!");
-    }
-
-    private void OnTimerEnded()
+    void OnTimerEnd()
     {
         Debug.Log("Timer ended!");
     }
-
-    private void OnTimerRunning()
-    {
-        Debug.Log("Timer is running...");
-    }
-
-    private void OnTimerReset()
-    {
-        Debug.Log("Timer reset!");
-    }
 }
 ```
-This example demonstrates how to use the Timer class and handle its events.
