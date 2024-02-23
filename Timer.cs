@@ -75,7 +75,12 @@ public class Timer
         /// <summary>
         /// The timer operates in instant stop mode, where it stops immediately upon reaching the specified time.
         /// </summary>
-        InstantStop
+        InstantStop,
+
+        /// <summary>
+        /// The timer operates in loop mode, where it restarts the counting cycle when reaching the specified time.
+        /// </summary>
+        Loop
     }
 
 
@@ -216,6 +221,12 @@ public class Timer
             {
                 Pause();
                 return;
+            }
+            else if (timerMode == TimerMode.Loop)
+            {
+                runningTime -= releaseTime;
+                runningTime = runningTime > 0 ? runningTime : 0;
+                TimerStarted?.Invoke();
             }
         }
         TimerRunning?.Invoke();
