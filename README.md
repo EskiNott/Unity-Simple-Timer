@@ -1,45 +1,91 @@
+Here is a README.md for a Unity Simple Timer project based on the provided code:
+
 # Unity Simple Timer
 
-Unity Simple Timer is a lightweight timer class designed for use in Unity projects. This timer allows you to easily manage timed events, track progress, and execute actions upon timer completion.
+This is a simple timer utility for Unity. It allows you to create and control timer objects in your Unity projects.
 
 ## Features
 
-- **Simple Implementation**: Easily integrate timers into your Unity projects with minimal setup.
-- **Flexible Usage**: Start, pause, resume, reset, and monitor the progress of timers as needed.
-- **Event-driven Design**: Utilizes events to notify when the timer starts, pauses, resumes, ends, and resets, enabling seamless integration with other game components.
+- Create timer objects with a specified duration
+- Start, pause, and reset timers
+- Get timer progress and check if timer has ended
+- Timer events for start, pause, end etc. 
+- Different timer modes:
+  - Continuous
+  - Instant stop 
+  - Loop
+- Easy to use API
 
-## How to Use
+## Usage
 
-1. **Import Timer Class**: Import the `Timer.cs` class into your Unity project.
-2. **Instantiate Timer**: Create an instance of the `Timer` class wherever you need to use a timer.
-3. **Configure Timer**: Set the release time using the `Begin` method and start the timer with the `Play` method.
-4. **Update Timer**: Call the `Update` method in your Unity `Update` loop to update the timer.
-5. **Handle Events**: Subscribe to the timer events (`TimerStarted`, `TimerPlayed`, `TimerPaused`, `TimerEnded`, `TimerRunning`, `TimerReset`) to execute custom actions based on timer states.
-
-## Example
+### Create a timer
 
 ```csharp
-using UnityEngine;
+Timer myTimer = new Timer();
+```
 
-public class TimerExample : MonoBehaviour
-{
-    Timer timer;
+### Initialize timer
 
-    void Start()
-    {
-        timer = new Timer();
-        timer.TimerEnded += OnTimerEnd;
-        timer.Begin(10f); // Start a timer with 10 seconds
-    }
+Set duration and start timer:
 
-    void Update()
-    {
-        timer.Update();
-    }
+```csharp
+myTimer.Begin(10f); // 10 seconds duration
+```
 
-    void OnTimerEnd()
-    {
-        Debug.Log("Timer ended!");
-    }
+Optionally specify timer mode:
+
+```csharp
+myTimer.Begin(10f, TimerMode.Loop); 
+```
+
+### Control timer
+
+```csharp
+myTimer.Play(); // Start or resume
+myTimer.Pause(); // Pause
+myTimer.Reset(); // Reset
+```
+
+### Check timer state
+
+```csharp
+float progress = myTimer.Progress(); // Get progress
+
+if(myTimer.IsEnd()) {
+  // Timer ended
+}
+
+if(myTimer.ReachProgress(5f)) {
+  // Reached 5 seconds  
 }
 ```
+
+### Timer events
+
+```csharp
+myTimer.TimerStarted += OnTimerStarted;
+
+...
+
+void OnTimerStarted() {
+  // Do something
+}
+```
+
+### Update timer
+
+Call `Update()` method on timer instance:
+
+```csharp
+void Update() {
+  myTimer.Update();
+}
+```
+
+## Installation
+
+Simply include the Timer.cs file in your Unity project.
+
+## Contributing
+
+Pull requests are welcome. Feel free to open issues for any enhancements or bugs.
