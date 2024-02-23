@@ -19,6 +19,8 @@ public class Timer
     /// </summary>
     [SerializeField] float runningTime;
 
+    [SerializeField] TimerMode timerMode;
+
     /// <summary>
     /// Event invoked when the timer is started
     /// </summary>
@@ -57,7 +59,25 @@ public class Timer
         Running = false;
         releaseTime = 0;
         runningTime = 0;
+        timerMode = TimerMode.InstantStop;
     }
+
+    /// <summary>
+    /// Enum representing different modes of operation for the timer.
+    /// </summary>
+    public enum TimerMode
+    {
+        /// <summary>
+        /// The timer operates in continuous mode, where it continues counting even after reaching the specified time.
+        /// </summary>
+        Continuous,
+
+        /// <summary>
+        /// The timer operates in instant stop mode, where it stops immediately upon reaching the specified time.
+        /// </summary>
+        InstantStop
+    }
+
 
     /// <summary>
     /// Get the progress of the timer.
@@ -65,14 +85,9 @@ public class Timer
     /// <returns>Representing the normalized time in float.</returns>
     public float Progress()
     {
-        if (releaseTime != 0 && runningTime != 0)
-        {
-            return runningTime / releaseTime;
-        }
-        else
-        {
-            return 0;
-        }
+        return releaseTime != 0 && runningTime != 0
+        ? runningTime / releaseTime
+        : 0;
 
     }
 
@@ -87,12 +102,24 @@ public class Timer
     }
 
     /// <summary>
+    /// Checks if the timer has reached a certain progress percentage.
+    /// </summary>
+    /// <param name="percentage">The percentage value (between 0 and 1) representing the progress to check against.</param>
+    /// <returns>True if the timer has reached the specified progress percentage, false otherwise.</returns>
+    /// <remarks>Typically, the <paramref name="percentage"/> parameter should be in the range of 0 to 1, where 0 represents 0% progress and 1 represents 100% progress.</remarks>
+    public bool ReachProgressPercentage(float percentage)
+    {
+        return runningTime > releaseTime * percentage;
+    }
+
+    /// <summary>
     /// Reset the timer to its initial state
     /// </summary>
     public void Reset()
     {
         releaseTime = 0;
         ResetProgress();
+        SetTimerMode(TimerMode.InstantStop);
         TimerReset?.Invoke();
     }
 
@@ -118,10 +145,11 @@ public class Timer
     /// Initialize the timer with the specified release time and start it
     /// </summary>
     /// <param name="releaseTime"></param>
-    public void Begin(float releaseTime)
+    public void Begin(float releaseTime, TimerMode timerMode = TimerMode.InstantStop)
     {
         Reset();
         this.releaseTime = releaseTime;
+        SetTimerMode(timerMode);
         Play();
         TimerStarted?.Invoke();
     }
@@ -145,12 +173,23 @@ public class Timer
     }
 
     /// <summary>
-    /// Manually set the progress of the timer as a percentage
+    /// Sets the progress of the timer based on a percentage value.
     /// </summary>
-    /// <param name="percentage"></param>
+    /// <param name="percentage">The percentage value (between 0 and 1) representing the progress of the timer.</param>
+    /// <remarks>Typically, the <paramref name="percentage"/> parameter should be in the range of 0 to 1, where 0 represents 0% progress and 1 represents 100% progress.</remarks>
     public void SetProgressPercentage(float percentage)
     {
-        runningTime = releaseTime * (percentage / 100);
+        runningTime = releaseTime * percentage;
+    }
+
+
+    /// <summary>
+    /// Sets the mode of operation for the timer.
+    /// </summary>
+    /// <param name="timerMode">The mode to set for the timer.</param>
+    public void SetTimerMode(TimerMode timerMode)
+    {
+        this.timerMode = timerMode;
     }
 
     /// <summary>
@@ -170,7 +209,15 @@ public class Timer
     {
         if (!Running) { return; }
         runningTime += Time.deltaTime;
-        if (IsEnd()) { TimerEnded?.Invoke(); }
+        if (IsEnd())
+        {
+            TimerEnded?.Invoke();
+            if (timerMode == TimerMode.InstantStop)
+            {
+                Pause();
+                return;
+            }
+        }
         TimerRunning?.Invoke();
     }
 }
